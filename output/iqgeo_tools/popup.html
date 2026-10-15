@@ -1,0 +1,19 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+  body{font:13px system-ui,sans-serif;width:300px;margin:12px}
+  h1{font-size:15px;margin:0 0 8px}
+  button{display:block;width:100%;padding:8px;margin:0 0 6px;font-size:13px;text-align:left;cursor:pointer}
+  button b{display:block;font-size:14px}
+  button span{color:#555;font-size:11px}
+  p{color:#555;margin:8px 0 0;font-size:12px}
+</style></head>
+<body>
+  <h1>IQGeo Tools</h1>
+  <button data-tool="design"><b>Design CSV Updater</b><span>Update any feature type from the design export; clean extra spaces</span></button>
+  <button data-tool="address"><b>Address CSV Updater</b><span>Demand point addresses from a CSV report</span></button>
+  <button data-tool="wallbox"><b>Wall Box Address Updater</b><span>Wall box addresses from the nearest address point</span></button>
+  <button data-tool="name"><b>Name Address Updater</b><span>Manhole / pole addresses from the feature name; ZIP from address file or USPS</span></button>
+  <p>Use on your logged-in IQGeo Network Manager tab. Opening a tool hides the other tool panels; click the same tool again to hide or show it.</p>
+  <script src="popup.js"></script>
+</body></html>
