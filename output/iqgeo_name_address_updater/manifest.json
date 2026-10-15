@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "IQGeo Name Address Updater",
+  "version": "1.2.0",
+  "description": "Fills and corrects address attributes of manholes and poles from the feature name (e.g. 'POLE R 1021 ARIZONA ST SE') through the IQGeo REST API (postal code and ZIP+4 can be taken from a PSA address export matched on street name, type and direction, or looked up from the USPS Addresses API), with preview, field-level selection, verification and undo.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "IQGeo Name Address Updater"
+  },
+  "host_permissions": [
+    "https://apis.usps.com/*",
+    "https://apis-tem.usps.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
