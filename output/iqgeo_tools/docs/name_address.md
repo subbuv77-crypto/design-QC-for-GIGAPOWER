@@ -27,11 +27,11 @@ No address-point file is needed – the name is the source. Optionally, the **Po
 
 ## Name rules
 `[POLE|FP|HH] <letter>[-][n] <number>[-n] <street name> <type> [direction] [HH]`
-(prefix may be `F`, `F-`, `F-1`, `F1`; a house-number suffix like `3124-1` / `3124-2` is ignored → house number `3124`; e.g. `POLE O1 3200 CARLOTA RD NW`, `POLE O-1 3200 CARLOTA RD NW`, `POLE F- 1900 Cherry Ln NW`, `POLE R 1913 GABALDON CT`; case does not matter)
+(prefix may be `F`, `F-`, `F-1`, `F1`; a house-number suffix like `3124-1` / `3124-2`, `3025-A` / `2709-B` or `2709B` is ignored → house number `3124` / `3025` / `2709`; e.g. `POLE O1 3200 CARLOTA RD NW`, `POLE O-1 3200 CARLOTA RD NW`, `POLE F- 1900 Cherry Ln NW`, `POLE R 1913 GABALDON CT`; case does not matter)
 
 | Field | Value |
 |---|---|
-| addr_house_number | number (`1125-3` → `1125`) |
+| addr_house_number | number (`1125-3` → `1125`, `3025-A` → `3025`) |
 | addr_street_direction | SE / SW / NE / NW / N / S / E / W |
 | addr_street_name | Title Case (`RIDGECREST` → `Ridgecrest`) |
 | addr_street_name_suffix | ST→St, DR→Dr, AVE→Ave, BLVD→Blvd, PL→Pl, RD→Rd, LOOP→Loop, CT, LN, WAY, CIR, TER, PKWY, HWY, TRL, PLZ |

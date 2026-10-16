@@ -7,8 +7,9 @@
   const TYPES = { ST: 'St', DR: 'Dr', AVE: 'Ave', BLVD: 'Blvd', PL: 'Pl', RD: 'Rd', LOOP: 'Loop', CT: 'Ct', LN: 'Ln',
     WAY: 'Way', CIR: 'Cir', TER: 'Ter', PKWY: 'Pkwy', HWY: 'Hwy', TRL: 'Trl', PLZ: 'Plz',
     PI: 'Pl' /* common typo: capital I instead of L */ };
-  // [POLE|FP|HH] <letter>[-][n] <house number>[-n] <street name> <type> [direction] [HH]   (direction is optional)
-  const NAME_RE = /^(?:(?:POLE|FP|HH)\s+)?[A-Z](?:-?\d*)?\s+(\d+)(?:-\d+)?\s+(.+?)(?:\s+(SE|SW|NE|NW|N|S|E|W))?(?:\s+HH)?$/;
+  // [POLE|FP|HH] <letter>[-][n] <house number>[-n | -A | A] <street name> <type> [direction] [HH]   (direction is optional)
+  // a house-number suffix (3124-1, 3025-A, 2709B) is dropped: house number 3124 / 3025 / 2709
+  const NAME_RE = /^(?:(?:POLE|FP|HH)\s+)?[A-Z](?:-?\d*)?\s+(\d+)(?:-[A-Z0-9]+|[A-Z])?\s+(.+?)(?:\s+(SE|SW|NE|NW|N|S|E|W))?(?:\s+HH)?$/;
 
   function parseName(name) {
     const n = ws(name).toUpperCase();
