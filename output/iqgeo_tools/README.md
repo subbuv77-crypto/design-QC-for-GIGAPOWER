@@ -1,4 +1,4 @@
-# IQGeo Tools v1.1 (Chrome extension)
+# IQGeo Tools v1.2 (Chrome extension)
 
 One extension containing the IQGeo bulk-update tools. Each tool works exactly as its separate extension did:
 
@@ -9,6 +9,7 @@ One extension containing the IQGeo bulk-update tools. Each tool works exactly as
 | **Wall Box Address Updater** (v2.0) | Match wall boxes to address points by coordinates and copy the address | `docs/wallbox_address.md` |
 | **Name Address Updater** (v1.2) | Fill manhole / pole addresses from the feature name; postal code from the PSA address file or USPS | `docs/name_address.md` |
 | **Delete Conflict Fixer** (v1.1) | Clear *Conflict: Update / Delete* by keeping the design's delete | below |
+| **Name–ID Fixer** (v1.2) | Make the number in a feature's name match its id (e.g. `fiber_ont/1025037` → `XX-ONT-1025037`) | below |
 
 ## Install
 1. Remove (or turn off) the four separate extensions in `chrome://extensions`, so you don't have two copies of a tool.
@@ -49,6 +50,18 @@ If the PUT is refused (HTTP 404 "does not exist"), nothing was changed: this IQG
 **Find IQGeo's revert / conflict functions** (v1.1.1, read only) lists the function names in the IQGeo page and the URL paths in
 its scripts that mention conflicts, reverting, rebasing or deltas. It calls none of them. **Copy results** puts the list on the
 clipboard (or saves a .txt) so the right call for removing a design's own change record can be added to the tool.
+
+## Name–ID Fixer (v1.2)
+Makes the id-like number in each feature's `name` equal to the feature's id number; the rest of the name is kept:
+`fiber_ont/1025037  XX-ONT-1025030 → XX-ONT-1025037`, `fiber_ont/1349979  UNSET-1111111-Apt B → UNSET-1349979-Apt B`.
+1. Load the design export zip or CSVs with `id` and `name` columns (e.g. `fiber_ont.csv`). Feature types are listed; `fiber_ont` is
+   pre-ticked when present. *Design to edit in* is filled from the export's `design_id` (else `delta_created`) – check it.
+   *Only features with Design Created =* is left blank (all features).
+2. **1. Preview** reads each name live from IQGeo. An id-like number is a run of at least 5 digits (setting), so `Apt 2` or
+   `Unit 12` is never touched. Names already containing the id are left alone. Skipped and listed: names with no such number,
+   and names with several numbers none of which is the id.
+3. Untick any row, then **2. Apply ticked changes** – only `name` is written; first feature verified; names changed in IQGeo
+   after Preview are skipped; undo log, Restore, Stop and Clear file selection as in the other tools.
 
 ## Permissions
 `activeTab`, `scripting` (open the panel on the IQGeo tab), `storage` (USPS key/secret and cache, Name tool only) and host access
