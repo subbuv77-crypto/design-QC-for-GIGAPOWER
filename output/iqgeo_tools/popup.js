@@ -3,7 +3,8 @@ const TOOLS = {
   design:  { files: ['tools/design_csv.js'], panel: '__iqgCsvPanel3' },
   address: { files: ['tools/address_csv.js'], panel: '__iqgAddrPanel' },
   wallbox: { files: ['tools/wallbox_address.js'], panel: '__iqgWbAddrPanel' },
-  name:    { files: ['tools/namerules.js', 'tools/name_address.js'], panel: '__iqgNameAddrPanel' }
+  name:    { files: ['tools/namerules.js', 'tools/name_address.js'], panel: '__iqgNameAddrPanel' },
+  conflict: { files: ['tools/conflict_fix.js'], panel: '__iqgConflictPanel' }
 };
 
 document.querySelectorAll('button[data-tool]').forEach(btn => btn.addEventListener('click', async () => {

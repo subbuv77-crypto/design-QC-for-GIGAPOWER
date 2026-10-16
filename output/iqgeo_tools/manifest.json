@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "IQGeo Tools",
-  "version": "1.0.0",
-  "description": "IQGeo bulk-update tools in one extension: Design CSV Updater, Address CSV Updater, Wall Box Address Updater and Name Address Updater - each with preview, field-level selection, verification, undo, Stop and Clear file selection.",
+  "version": "1.1.0",
+  "description": "IQGeo bulk-update tools in one extension: Design CSV Updater, Address CSV Updater, Wall Box Address Updater and Name Address Updater, plus a Delete Conflict Fixer - each with preview, field-level selection, verification, undo, Stop and Clear file selection.",
   "permissions": ["activeTab", "scripting", "storage"],
   "action": { "default_popup": "popup.html", "default_title": "IQGeo Tools" },
   "host_permissions": ["https://apis.usps.com/*", "https://apis-tem.usps.com/*"],
