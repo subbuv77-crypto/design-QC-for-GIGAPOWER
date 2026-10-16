@@ -44,6 +44,11 @@ changed in master afterwards. The fixer keeps the design's delete:
 5. Run **Check Design → Conflicts** in IQGeo again; the conflict should be gone.
 
 If the delete step fails after the PUT, the feature is back in the design – the log says so; delete it in IQGeo by hand.
+If the PUT is refused (HTTP 404 "does not exist"), nothing was changed: this IQGeo does not let a deleted feature be written back.
+
+**Find IQGeo's revert / conflict functions** (v1.1.1, read only) lists the function names in the IQGeo page and the URL paths in
+its scripts that mention conflicts, reverting, rebasing or deltas. It calls none of them. **Copy results** puts the list on the
+clipboard (or saves a .txt) so the right call for removing a design's own change record can be added to the tool.
 
 ## Permissions
 `activeTab`, `scripting` (open the panel on the IQGeo tab), `storage` (USPS key/secret and cache, Name tool only) and host access

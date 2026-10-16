@@ -55,3 +55,35 @@ if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage)
   });
 }
 if (typeof module !== 'undefined' && module.exports) module.exports = { lookup, getToken };
+
+// ---------- read-only probe for the Delete Conflict Fixer ----------
+// Lists, in the IQGeo page's own JavaScript (main world), functions whose names mention conflicts, deltas or reverting.
+// Reads names only; calls nothing.
+function iqgProbeMain() {
+  const RE = /conflict|resolv|revert|rebase|delta|discard|undo/i;
+  const out = { myw: typeof window.myw, version: (window.myw && (myw.version || myw.myworldVersion)) || '', hits: [] };
+  const seen = new Set();
+  const walk = (obj, path, depth) => {
+    if (!obj || (typeof obj !== 'object' && typeof obj !== 'function') || seen.has(obj) || depth > 3 || out.hits.length > 400) return;
+    seen.add(obj);
+    let names = [];
+    for (let o = obj, d = 0; o && o !== Object.prototype && o !== Function.prototype && d < 6; o = Object.getPrototypeOf(o), d++)
+      try { names.push(...Object.getOwnPropertyNames(o)); } catch {}
+    for (const n of [...new Set(names)]) {
+      let v; try { v = obj[n]; } catch { continue; }
+      if (RE.test(n)) out.hits.push(`${path}.${n}` + (typeof v === 'function' ? `(${String(v).slice(0, String(v).indexOf(')') + 1).replace(/^[^(]*\(/, '')}` : ` : ${typeof v}`));
+      if (typeof v === 'object' && v && /^(app|database|datasources?|system|comms|.*[Mm]anager|.*[Pp]lugin.*|delta.*|versioning.*)$/.test(n)) walk(v, `${path}.${n}`, depth + 1);
+    }
+  };
+  try { if (window.myw) walk(window.myw, 'myw', 0); } catch (e) { out.error = String(e); }
+  return out;
+}
+if (typeof chrome !== 'undefined' && chrome.runtime && chrome.runtime.onMessage) {
+  chrome.runtime.onMessage.addListener((msg, sender, send) => {
+    if (!msg || msg.type !== 'iqgProbe' || !sender.tab) return false;
+    chrome.scripting.executeScript({ target: { tabId: sender.tab.id }, world: 'MAIN', func: iqgProbeMain })
+      .then(r => send((r && r[0] && r[0].result) || { error: 'no result' }))
+      .catch(e => send({ error: e.message || String(e) }));
+    return true;
+  });
+}

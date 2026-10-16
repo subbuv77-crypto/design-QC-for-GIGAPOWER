@@ -52,6 +52,8 @@
       <label class="t">Conflicts found</label>
       <div id="changes" class="box sm">Enter the design and the id(s), then Preview. Nothing is changed until step 2.</div>
       <button id="report" disabled>Download report</button>
+      <button id="probe" title="Read only: lists IQGeo's own conflict / revert functions and URLs">Find IQGeo's revert / conflict functions</button>
+      <button id="copyProbe" disabled>Copy results</button>
       <div id="status" class="sm" style="margin-top:8px;font-weight:600"></div>
       <div id="log">1) Check the design  2) Enter the id  3) Preview – check the name matches  4) Keep the delete  5) Run Check Design again in IQGeo</div>
     </div>`;
@@ -180,6 +182,36 @@
     log(`\nDone. Fixed ${ok}, failed ${fail}. Now run Check Design (Conflicts) in IQGeo again — the conflict should be gone.`);
     $('status').textContent = `Fixed ${ok}, failed ${fail}`;
     plan = []; setBusy(false);
+  };
+
+  // ---------- read-only probe: what does this IQGeo call to revert / resolve a design change? ----------
+  let probeText = '';
+  $('probe').onclick = async () => {
+    setBusy(true); $('probe').disabled = true;
+    setLog('Looking for IQGeo\'s own conflict / revert functions and URLs (read only – nothing is called or changed)…');
+    const lines = [`IQGeo: ${location.origin}  design: ${design()}`];
+    try {
+      const r = await chrome.runtime.sendMessage({ type: 'iqgProbe' });
+      if (r.error) lines.push('page functions: ' + r.error);
+      else { lines.push(`myw: ${r.myw} ${r.version}`); lines.push(...(r.hits.length ? r.hits : ['(no matching functions found)'])); }
+    } catch (e) { lines.push('page functions: ' + e.message); }
+    // URL paths in the page's own scripts that mention conflicts / reverting / deltas
+    const RE = /["'`](\/?[\w\-{}$:./]*(?:conflict|resolve|revert|rebase|discard)[\w\-{}$:./]*)["'`]/gi;
+    const found = new Set();
+    for (const sc of [...document.scripts]) {
+      try {
+        const txt = sc.src ? (new URL(sc.src).origin === location.origin ? await (await fetch(sc.src, { credentials: 'same-origin' })).text() : '') : sc.textContent;
+        for (const m of txt.matchAll(RE)) if (m[1].length < 120 && m[1].includes('/')) found.add(m[1]);
+      } catch {}
+    }
+    lines.push('--- URL paths in IQGeo scripts ---', ...(found.size ? [...found].sort() : ['(none found)']));
+    probeText = lines.join('\n');
+    log('\n' + probeText + '\n\nClick "Copy results" and paste them to your assistant.');
+    $('copyProbe').disabled = false; setBusy(false); $('probe').disabled = false;
+  };
+  $('copyProbe').onclick = async () => {
+    try { await navigator.clipboard.writeText(probeText); log('Copied.'); }
+    catch { download(`iqgeo_probe_${stamp()}.txt`, probeText, 'text/plain'); log('Clipboard blocked – saved as a file instead.'); }
   };
 
   $('report').onclick = () => {
